@@ -1,0 +1,20 @@
+include cont.prm
+
+
+
+set Additional shared libraries = ./libplugin.so
+
+subsection Mesh refinement
+  set Initial global refinement                = {3|4|5|6}
+end
+
+
+subsection Discretization
+  # The polynomial degree to use for the composition variable(s). Units:
+  # None.
+  set Composition polynomial degree           = 3
+  set Stokes velocity polynomial degree       = 3
+
+  # The polynomial degree to use for the temperature variable. Units: None.
+  set Temperature polynomial degree           = 3
+end

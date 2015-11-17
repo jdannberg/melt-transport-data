@@ -1,0 +1,7 @@
+include cont.prm
+
+set Additional shared libraries = ./libplugin.so
+
+subsection Mesh refinement
+  set Initial global refinement                = 5
+end

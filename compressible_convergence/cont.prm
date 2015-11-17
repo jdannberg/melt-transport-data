@@ -1,0 +1,10 @@
+include base.prm
+
+set Additional shared libraries = ./libplugin.so
+
+set Linear solver tolerance                = 1e-12
+set Nonlinear solver tolerance             = 1e-10
+
+subsection Mesh refinement
+  set Initial global refinement                = {3|4|5|6|7}
+end
