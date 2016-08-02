@@ -8,13 +8,13 @@ set Adiabatic surface temperature          = 1600               # default: 0
 set CFL number                             = 1.0
 set Composition solver tolerance           = 1e-12
 set Nonlinear solver scheme                = iterated IMPES
-set Output directory                       = plume_solid_density
+set Output directory                       = ridge_solid_density
 set Max nonlinear iterations               = 10
 set Linear solver tolerance                = 1e-9
 
 set Dimension                              = 2
 
-set End time                               = 2e5
+set End time                               = 2.5e6
 
 set Pressure normalization                 = surface
 set Surface pressure                       = 0
@@ -30,7 +30,7 @@ subsection Discretization
   set Composition polynomial degree     = 1
 
   subsection Stabilization parameters
-    set beta  = 0.1
+#    set beta  = 0.4
   end
 end
 
@@ -41,15 +41,15 @@ end
 
 
 subsection Boundary temperature model
-  set Model name = function
+  set Model name = initial temperature
 
   subsection Initial temperature
     set Minimal temperature = 293
-    set Maximal temperature = 1850
+    set Maximal temperature = 1600
   end
 
   subsection Function
-    set Function expression = if(y<150000,1990,293)
+    set Function expression = if(y<150000,1840,293)
     set Variable names      = x,y
   end
 end
@@ -60,7 +60,7 @@ end
 
 subsection Boundary velocity model
   subsection Function
-    set Function constants  = u0=1.5
+    set Function constants  = u0=0.05
     set Variable names      = x,z
     set Function expression = 0;u0
   end
@@ -70,8 +70,8 @@ subsection Geometry model
   set Model name = box # default: 
 
   subsection Box
-    set X extent  = 1875
-    set Y extent  = 300000
+    set X extent  = 600
+    set Y extent  = 100000
     set Y repetitions = 160
   end
 
@@ -90,7 +90,7 @@ end
 subsection Initial conditions
   set Model name = adiabatic
   subsection Adiabatic
-    set Age top boundary layer      = 5e9
+    set Age top boundary layer      = 1e6
     set Age bottom boundary layer   = 0.0
     set Amplitude                   = 0
     set Radius                      = 0
@@ -113,6 +113,11 @@ end
 subsection Material model
 
   set Model name = density gradient approximation 
+
+  subsection Density gradient approximation
+    set Use bulk density = false
+  end
+
   subsection Melt simple
     set Reference solid density = 3400
     set Reference melt density = 2776
@@ -128,7 +133,7 @@ subsection Material model
     set Melt compressibility = 3.8462e-11
     set Melt bulk modulus derivative = 1.6
     set Use full compressibility = true
-    set Thermal conductivity = 4.7
+    set Thermal conductivity = 4.7e1
     set Melt extraction depth = 0.0
     set Freezing rate = 0.0
   end
@@ -170,7 +175,7 @@ end
 subsection Model settings
   set Fixed temperature boundary indicators   = 2
   set Fixed composition boundary indicators   = 2
-  set Prescribed velocity boundary indicators = 2:function
+  set Prescribed velocity boundary indicators = 2:function #,3:function 
 
   set Tangential velocity boundary indicators = 0,1
   set Zero velocity boundary indicators       = 
@@ -204,13 +209,14 @@ subsection Postprocess
     set Number of grouped files       = 0
     set Interpolate output            = false
     set Output format                 = vtu
-    set Time between graphical output = 2500                                                                               # default: 1e8
+    set Time between graphical output = 10000                                                                               # default: 1e8
   end
 
 end
 
 subsection Checkpointing
   set Time between checkpoint = 1700
+#  set Steps between checkpoint = 150
 end
 
 

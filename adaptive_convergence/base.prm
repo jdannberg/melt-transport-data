@@ -54,7 +54,7 @@ subsection Compositional fields
   set Names of fields = porosity
 end
 
-subsection Fluid Pressure Boundary Condition
+subsection Boundary fluid pressure model
  set Plugin name = PressureBdry
 end
 
@@ -139,7 +139,6 @@ subsection Model settings
 
   set Tangential velocity boundary indicators = 
   set Zero velocity boundary indicators       =           # default: 
-
   set Include melt transport                  = true
 end
 
@@ -150,11 +149,14 @@ subsection Postprocess
 
   subsection Visualization
 
-    set List of output variables      = melt density, permeability, melt viscosity, compaction viscosity, gravity, material properties, nonadiabatic pressure
-#    set List of output variables      = gravity, material properties, nonadiabatic pressure
+    set List of output variables      = gravity, material properties, nonadiabatic pressure
 
     subsection Material properties
     set List of material properties   = density, viscosity, thermal expansivity, reaction terms
+    end
+
+    subsection Melt material properties
+      set List of properties = fluid density, permeability, fluid viscosity, compaction viscosity
     end
 
     # VTU file output supports grouping files from several CPUs into one file

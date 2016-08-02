@@ -8,7 +8,7 @@ set Adiabatic surface temperature          = 1600               # default: 0
 set CFL number                             = 1.0
 set Composition solver tolerance           = 1e-12
 set Nonlinear solver scheme                = iterated IMPES
-set Output directory                       = upwelling_layer_bulk_density
+set Output directory                       = ridge_fluid_density
 set Max nonlinear iterations               = 10
 set Linear solver tolerance                = 1e-9
 
@@ -112,12 +112,7 @@ end
 
 subsection Material model
 
-#  set Model name = melt simple 
-  set Model name = density gradient approximation 
-
-  subsection Density gradient approximation
-    set Use bulk density = true #false
-  end
+  set Model name = melt simple 
 
   subsection Melt simple
     set Reference solid density = 3400
@@ -133,10 +128,10 @@ subsection Material model
     set Solid compressibility = 3.2e-12
     set Melt compressibility = 3.8462e-11
     set Melt bulk modulus derivative = 1.6
-    set Use full compressibility = true #false
+    set Use full compressibility = true
     set Thermal conductivity = 4.7e1
     set Melt extraction depth = 0.0
-    set Freezing rate = 0.0 #6.25e-5
+    set Freezing rate = 0.0
   end
 end
 
@@ -166,11 +161,10 @@ subsection Mesh refinement
 end
 
 
-subsection Fluid Pressure Boundary Condition
+subsection Boundary fluid pressure model
   set Plugin name = density
   subsection Density
-    set Include Fluid Density = false
-    set Include Solid Density = true
+    set Density formulation = solid density
   end
 end
 
@@ -185,6 +179,9 @@ subsection Model settings
   set Include adiabatic heating               = true
   set Include melt transport                  = true
   set Include latent heat                     = true
+end
+
+subsection Melt settings
   set Melt transport threshold                = 1e-6
 end
 
@@ -195,10 +192,14 @@ subsection Postprocess
 
   subsection Visualization
 
-    set List of output variables      = material properties, nonadiabatic temperature, nonadiabatic pressure, melt density, permeability, melt viscosity, compaction viscosity, melt fraction
+    set List of output variables      = material properties, melt material properties, nonadiabatic temperature, nonadiabatic pressure, melt fraction
 
     subsection Material properties
       set List of material properties = density, viscosity, thermal expansivity, reaction terms
+    end
+
+    subsection Melt material properties
+      set List of properties = fluid density, permeability, fluid viscosity, compaction viscosity
     end
 
     set Number of grouped files       = 0

@@ -8,13 +8,13 @@ set Adiabatic surface temperature          = 1600               # default: 0
 set CFL number                             = 0.5
 set Composition solver tolerance           = 1e-12
 set Nonlinear solver scheme                = iterated IMPES
-set Output directory                       = plume_incompressible_no_heating_320
+set Output directory                       = plume_incompressible_heating
 set Max nonlinear iterations               = 10
 set Linear solver tolerance                = 1e-9
 
 set Dimension                              = 2
 
-set End time                               = 3e5 #102800 #3e5
+set End time                               = 2e5
 
 set Pressure normalization                 = surface
 set Surface pressure                       = 0
@@ -30,7 +30,7 @@ subsection Discretization
   set Composition polynomial degree     = 2
 
   subsection Stabilization parameters
-#    set beta  = 0.4
+    set beta  = 0.1
   end
 end
 
@@ -60,7 +60,7 @@ end
 
 subsection Boundary velocity model
   subsection Function
-    set Function constants  = u0=1.5 #u0=0.05
+    set Function constants  = u0=1.5
     set Variable names      = x,z
     set Function expression = 0;u0
   end
@@ -113,7 +113,6 @@ end
 subsection Material model
 
   set Model name = melt simple 
-#  set Model name = density gradient approximation 
   subsection Melt simple
     set Reference solid density = 3400
     set Reference melt density = 2776
@@ -129,9 +128,9 @@ subsection Material model
     set Melt compressibility = 3.8462e-11
     set Melt bulk modulus derivative = 1.6
     set Use full compressibility = false
-    set Thermal conductivity = 4.7 #4.7e1
+    set Thermal conductivity = 4.7
     set Melt extraction depth = 0.0
-    set Freezing rate = 6.25e-5 #0.5
+    set Freezing rate = 0.0
   end
 end
 
@@ -161,11 +160,10 @@ subsection Mesh refinement
 end
 
 
-subsection Fluid Pressure Boundary Condition
+subsection Boundary fluid pressure model
   set Plugin name = density
   subsection Density
-    set Include Fluid Density = false
-    set Include Solid Density = true
+    set Density formulation = solid density
   end
 end
 
@@ -178,7 +176,11 @@ subsection Model settings
   set Zero velocity boundary indicators       = 
 
   set Include melt transport                  = true
+end
+
+subsection Melt settings
   set Melt transport threshold                = 1e-3
+  set Heat advection by melt                  = true
 end
 
 subsection Heating model
@@ -191,10 +193,14 @@ subsection Postprocess
 
   subsection Visualization
 
-    set List of output variables      = material properties, nonadiabatic temperature, nonadiabatic pressure, melt density, permeability, melt viscosity, compaction viscosity, melt fraction, heating
+    set List of output variables      = material properties, melt material properties, nonadiabatic temperature, nonadiabatic pressure, melt fraction, heating
 
     subsection Material properties
       set List of material properties = density, viscosity, thermal expansivity, reaction terms
+    end
+
+    subsection Melt material properties
+      set List of properties = fluid density, permeability, fluid viscosity, compaction viscosity
     end
 
     set Number of grouped files       = 0

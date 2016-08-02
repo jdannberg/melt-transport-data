@@ -1,0 +1,2 @@
+The input files (.prm) for all computations are tested with Aspect version 1.5 pre (#181e5ae1fd937ddc3fe1eb4dc3a9e77857f01ad7). 
+(Newer version of Aspect should work for running these models, but might not necessarily yield exactly the same results.)

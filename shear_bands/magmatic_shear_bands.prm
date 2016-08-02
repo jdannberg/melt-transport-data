@@ -1,6 +1,11 @@
 # Listing of Parameters
 # ---------------------
 # Set up the magmatic shear bands testcase
+# for Newtonian rheology and analyze it using
+# the relations given in Spiegelman (2003):
+# Linear analysis of melt band formation by 
+# simple shear, Geochemistry, Geophysics,
+# Geosystems, 4(9), 8615.
 
 set Additional shared libraries            = ./libshear_bands.so
 
@@ -119,12 +124,11 @@ subsection Material model
   end
 end
 
-subsection Fluid Pressure Boundary Condition
+subsection Boundary fluid pressure model
   set Plugin name = density
 
   subsection Density
-    set Include Fluid Density = false
-    set Include Solid Density = true
+    set Density formulation = solid density
   end
 end
 
@@ -146,10 +150,12 @@ subsection Model settings
   set Zero velocity boundary indicators       = 
 
   set Include melt transport                  = true
-  set Melt transport threshold                = 1e-4
   set Include shear heating                   = false
 end
 
+subsection Melt settings
+  set Melt transport threshold                = 1e-4
+end
 
 subsection Postprocess
 
@@ -157,7 +163,11 @@ subsection Postprocess
 
   subsection Visualization
 
-    set List of output variables      = density, viscosity, thermal expansivity, melt density, permeability, melt viscosity, compaction viscosity, strain rate
+    set List of output variables      = density, viscosity, thermal expansivity, strain rate, melt material properties 
+
+    subsection Melt material properties
+      set List of properties = fluid density, permeability, fluid viscosity, compaction viscosity
+    end
 
     set Number of grouped files       = 0
     set Output format                 = vtu

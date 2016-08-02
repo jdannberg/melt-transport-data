@@ -150,11 +150,10 @@ subsection Mesh refinement
 end
 
 
-subsection Fluid Pressure Boundary Condition
+subsection Boundary fluid pressure model
   set Plugin name = density
   subsection Density
-    set Include Fluid Density = true
-    set Include Solid Density = false
+    set Density formulation = fluid density
   end
 end
 
@@ -169,6 +168,9 @@ subsection Model settings
   set Include adiabatic heating               = true
   set Include melt transport                  = true
   set Include latent heat                     = true
+end
+
+subsection Melt settings
   set Melt transport threshold                = 0.0
 end
 
@@ -179,10 +181,14 @@ subsection Postprocess
 
   subsection Visualization
 
-    set List of output variables      = material properties, nonadiabatic temperature, melt density, permeability, melt viscosity, compaction viscosity, melt fraction, artificial viscosity composition
+    set List of output variables      = material properties, nonadiabatic temperature, melt fraction
 
     subsection Material properties
       set List of material properties = density, viscosity, thermal expansivity, reaction terms
+    end
+
+    subsection Melt material properties
+      set List of properties = fluid density, permeability, fluid viscosity, compaction viscosity
     end
 
     set Number of grouped files       = 0

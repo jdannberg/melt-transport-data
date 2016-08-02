@@ -1,9 +1,10 @@
 # Listing of Parameters
 # ---------------------
-# Set up the magmatic shear bands testcase
+# Set up the magmatic shear bands testcase in 3d
+
+set Additional shared libraries            = ./libshear_bands.so
 
 set Adiabatic surface temperature          = 1623               # default: 0
-set CFL number                             = 1.0
 set Nonlinear solver scheme                = iterated IMPES
 set Output directory                       = output_3d
 set Max nonlinear iterations               = 5
@@ -24,8 +25,11 @@ set Number of cheap Stokes solver steps    = 0
 
 subsection Discretization
   subsection Stabilization parameters
-    set beta  = 0.12 # default: 0.078
+    set beta  = 0.12
+    set gamma = 100
+    set Use artificial viscosity smoothing = true
   end
+  set Composition polynomial degree = 1
 end
 
 subsection Compositional fields
@@ -102,7 +106,7 @@ subsection Material model
   set Model name = shear bands material
 end
 
-subsection Fluid Pressure Boundary Condition
+subsection Boundary fluid pressure model
   set Plugin name = density
 end
 
@@ -124,8 +128,11 @@ subsection Model settings
   set Zero velocity boundary indicators       = 
 
   set Include melt transport                  = true
-  set Melt transport threshold                = 1e-4
   set Include shear heating                   = false
+end
+
+subsection Melt settings
+  set Melt transport threshold                = 1e-4
 end
 
 subsection Checkpointing
@@ -138,7 +145,11 @@ subsection Postprocess
 
   subsection Visualization
 
-    set List of output variables      = density, viscosity, melt pressure, melt velocity, permeability, melt viscosity, compaction viscosity, strain rate
+    set List of output variables      = density, viscosity, strain rate
+
+    subsection Melt material properties
+      set List of properties = fluid density, permeability, fluid viscosity, compaction viscosity
+    end
 
     set Number of grouped files       = 0
     set Output format                 = vtu

@@ -1,16 +1,17 @@
 # Listing of Parameters
 # ---------------------
 # Set up the magmatic shear bands testcase
+# with non-linear rheology after Katz et al.,
+# 2006: The dynamics of melt and shear 
+# localization in partially molten aggregates.
 
-set Additional shared libraries            = /home/mod/dannberg/aspect-git/benchmark/shear_bands/libshear_bands.so
+set Additional shared libraries            = ./libshear_bands.so
 
-set Adiabatic surface temperature          = 1623               # default: 0
-set CFL number                             = 1.0
+set Adiabatic surface temperature          = 1623
 set Nonlinear solver scheme                = iterated IMPES
 set Output directory                       = output
-set Max nonlinear iterations               = 10
+set Max nonlinear iterations               = 50
 set Nonlinear solver tolerance             = 1e-5
-set Linear solver tolerance                = 1e-12
 
 set Dimension                              = 2
 
@@ -23,15 +24,19 @@ set Start time                             = 0
 
 set Use years in output instead of seconds = true
 set Use direct solver for Stokes system    = false
-set Number of cheap Stokes solver steps    = 0
 
-# The stabilisation is changed for the different resolutions, 
-# decreasing it for higher resolution. Values in the comments
-# are for global refinements of (6, 7, 8, 9)
+# we want to have a similar contribution of velocity and strain rate
+# in the stabilization. Velocities are on the order of 1e-3 and cell
+# size * strain rate (which is used in the stabilization and scaled
+# by the parameter gamma) is on the order of 1e-5, so we set gamma to
+# 100. 
 subsection Discretization
   subsection Stabilization parameters
-    set beta  = 0.08 # 0.08, 0.04, 0.02, 0.01
+    set beta  = 0.05
+    set gamma = 100
+    set Use artificial viscosity smoothing = true
   end
+  set Composition polynomial degree = 1
 end
 
 subsection Compositional fields
@@ -102,18 +107,13 @@ end
 
 subsection Compositional initial conditions
   set Model name = shear bands initial condition
-
-  subsection Shear bands initial condition
-#    set Grid intervals for noise X = 256
-#    set Grid intervals for noise Y = 256
-  end
 end
 
 subsection Material model
   set Model name = shear bands material
 end
 
-subsection Fluid Pressure Boundary Condition
+subsection Boundary fluid pressure model
   set Plugin name = density
 end
 
@@ -121,8 +121,8 @@ subsection Mesh refinement
   set Coarsening fraction                      = 0.0
   set Refinement fraction                      = 0.0
 
-  set Initial adaptive refinement              = 0 
-  set Initial global refinement                = 6  # 6,7,8,9
+  set Initial adaptive refinement              = 0                    # default: 2
+  set Initial global refinement                = 5                    # default: 2
   set Strategy                                 = composition
   set Time steps between mesh refinement       = 0
 end
@@ -135,22 +135,32 @@ subsection Model settings
   set Zero velocity boundary indicators       = 
 
   set Include melt transport                  = true
-  set Melt transport threshold                = 1e-4
   set Include shear heating                   = false
 end
 
+subsection Melt settings
+  set Melt transport threshold                = 1e-4
+end
 
 subsection Postprocess
 
-  set List of postprocessors = visualization, velocity statistics, composition statistics, shear bands statistics
+  set List of postprocessors = visualization,composition statistics,velocity statistics,shear bands statistics
 
   subsection Visualization
 
-    set List of output variables      = density, viscosity, thermal expansivity, melt pressure, melt velocity, melt density, permeability, melt viscosity, compaction viscosity, strain rate, artificial viscosity composition
+    set List of output variables      = density, viscosity, thermal expansivity, strain rate, melt material properties, artificial viscosity composition
+
+    subsection Artificial viscosity composition
+      set Name of compositional field = porosity
+    end
+
+    subsection Melt material properties
+      set List of properties = fluid density, permeability, fluid viscosity, compaction viscosity
+    end
 
     set Number of grouped files       = 0
     set Output format                 = vtu
-    set Time between graphical output = 2e-9                                                                                # default: 1e8
+    set Time between graphical output = 0                                                                                # default: 1e8
   end
 
 end

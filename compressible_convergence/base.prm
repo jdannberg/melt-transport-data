@@ -6,7 +6,7 @@
 # in Aspect.
 # We compute these material properties in a new material model, which
 # is implemented in the .cc file, together with a postprocessor to calculate 
-# the error and a new pressure boundary cinsition.     
+# the error and a new pressure boundary condition.     
 # 
 set Additional shared libraries = ./libplugin.so
 
@@ -49,7 +49,7 @@ subsection Compositional fields
   set Names of fields = porosity
 end
 
-subsection Fluid Pressure Boundary Condition
+subsection Boundary fluid pressure model
  set Plugin name = PressureBdry
 end
 
@@ -129,7 +129,7 @@ subsection Mesh refinement
   set Refinement fraction                      = 0.0
 
   set Initial adaptive refinement              = 0                    # default: 2
-  set Initial global refinement                = 5                    # default: 2
+  set Initial global refinement                = 7                    # default: 2
   set Strategy                                 = composition
   set Time steps between mesh refinement       = 0
 end
@@ -153,11 +153,14 @@ subsection Postprocess
 
   subsection Visualization
 
-    set List of output variables      = melt density, permeability, melt viscosity, compaction viscosity, gravity, material properties, nonadiabatic pressure
-#    set List of output variables      = gravity, material properties, nonadiabatic pressure
+    set List of output variables      = gravity, material properties, nonadiabatic pressure
 
     subsection Material properties
-    set List of material properties   = density, viscosity, thermal expansivity, reaction terms, compressibility
+    set List of material properties   = density, viscosity, thermal expansivity, reaction terms
+    end
+
+    subsection Melt material properties
+      set List of properties = fluid density, permeability, fluid viscosity, compaction viscosity
     end
 
     # VTU file output supports grouping files from several CPUs into one file

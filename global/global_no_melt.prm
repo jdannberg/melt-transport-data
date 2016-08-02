@@ -150,15 +150,6 @@ subsection Mesh refinement
   end
 end
 
-
-subsection Fluid Pressure Boundary Condition
-  set Plugin name = density
-  subsection Density
-    set Include Fluid Density = true
-    set Include Solid Density = false
-  end
-end
-
 subsection Model settings
   set Fixed temperature boundary indicators   = 2,3
   set Fixed composition boundary indicators   = #2,3
@@ -171,7 +162,6 @@ subsection Model settings
   set Include adiabatic heating               = true
   set Include melt transport                  = false
   set Include latent heat                     = false
-  set Melt transport threshold                = 1e-4
 end
 
 

@@ -12,7 +12,7 @@ set datafile separator ","
 unset xtics
 
 set terminal postscript color portrait dashed enhanced 'Arial' size 18cm,15cm
-set output 'melt_volumes.eps'
+set output 'melt_volumes_plume.eps'
 
 set multiplot layout 2,1 title "Melt volume"
 
